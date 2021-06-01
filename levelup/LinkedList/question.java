@@ -145,4 +145,58 @@ public class question {
         p2 = reversNode(l2.next);
         p1.next = p2;
     }
+
+    public static ListNode mergeTwoLists(ListNode l1, ListNode l2){
+        if(l1 == null || l2 == null)
+            return l1 != null ? l1 : l2;
+
+        ListNode dummy = new ListNode(-1);
+        ListNode prev = dummy, c1 = l1, c2 = l2;
+
+        while(c1 != null && c2 != null){
+            if(c1.val <= c2.val){
+                prev.next = c1;
+                c1 = c1.next;
+            }else {
+                prev.next = c2;
+                c2 = c2.next;
+            }
+            prev = prev.next;
+        }
+        prev.next = c1 != null ? c1 : c2;
+        return dummy.next;
+    }
+
+    public static ListNode mergeKLists(ListNode[] lists){
+        if(lists.length == 0)
+            return null;
+
+        ListNode head = null;
+        for(ListNode node: lists){
+            head = mergeTwoLists(head, node);
+        }
+        return head;
+    }
+
+    // T : O(NlogkK), S : O(logK) -> N = k times of (avg length Of Linkedlist),
+    // where k is length of lists.
+    public static ListNode mergeList(ListNode[] lists, int si, int ei){
+        if(si == ei)
+            return lists[si];
+
+        int mid = (si + ei)/2;
+        ListNode leftMergeList = mergeList(lists, si, mid);
+        ListNode rightMergeList = mergeList(lists, mid + 1, ei);
+
+        return mergeTwoLists(leftMergeList, rightMergeList);
+    }
+
+    public static ListNode mergeKLists2(ListNode[] lists){
+        if(lists.length == 0)
+            return null;
+        
+        return mergeList(lists, 0, lists.length - 1);
+    }
+
+    
 }
