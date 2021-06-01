@@ -1,0 +1,16 @@
+b0q0 b1q1 b2q2 b3q3 
+b0q0 b1q1 b2q2 b4q3 
+b0q0 b1q1 b2q2 b5q3 
+b0q0 b1q1 b3q2 b4q3 
+b0q0 b1q1 b3q2 b5q3 
+b0q0 b1q1 b4q2 b5q3 
+b0q0 b2q1 b3q2 b4q3 
+b0q0 b2q1 b3q2 b5q3 
+b0q0 b2q1 b4q2 b5q3 
+b0q0 b3q1 b4q2 b5q3 
+b1q0 b2q1 b3q2 b4q3 
+b1q0 b2q1 b3q2 b5q3 
+b1q0 b2q1 b4q2 b5q3 
+b1q0 b3q1 b4q2 b5q3 
+b2q0 b3q1 b4q2 b5q3 
+15
