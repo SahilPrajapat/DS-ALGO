@@ -476,6 +476,48 @@ public class question {
         return head;
     }
 
+
+    public static ListNode multiplyLinkedListWithDigit(ListNode head, int dig){
+        
+        ListNode dummy = new ListNode(-1);
+        ListNode ac = dummy;  //awser current
+        ListNode curr = head;
+        int carry = 0;
+        while(curr != null || carry != 0){
+            int sum = carry + (curr != null ? curr.val : 0) * dig;
+            
+            int digit = sum % 10;
+            carry = sum / 10;
+            
+            ac.next = new ListNode(digit);
+            
+            if(curr != null)
+                curr = curr.next;
+            ac = ac.next;
+        }
+        
+        return dummy.next;
+    }
+
+    public static ListNode multiplyTwoLinkList(ListNode l1, ListNode l2) {
+        l1 = reverse(l1);
+        l2 = reverse(l2);
+
+        ListNode ans = new ListNode(-1); // dummy.
+        ListNode ans_itr = ans;
+        ListNode l2_itr = l2;
+
+        while (l2_itr != null) {
+            ListNode head = multiplyLinkedListWithDigit(l1, l2_itr.val);
+            l2_itr = l2_itr.next;
+            addTwoNumbers(ans_itr,head);
+            ans_itr = ans_itr.next;
+        }
+        
+        ans = ans.next;
+        return reverse(ans);
+    }
+
     public static boolean isCyclePresentInLL(ListNode head) {
         if(head == null || head.next == null)
             return false;
@@ -494,6 +536,9 @@ public class question {
         return false;
     }
 
+    public static ListNode multiplyTwoLL(ListNode l1, ListNode l2) {
+        return null;
+    }
     public static ListNode CycleNode(ListNode head) {
         if(head == null || head.next == null)
             return null;
