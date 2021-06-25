@@ -1,5 +1,4 @@
 
-
 public class quickSortLL {
     public static class ListNode {
         int val = 0;
