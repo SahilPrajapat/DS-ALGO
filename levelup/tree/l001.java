@@ -332,6 +332,8 @@ public class l001 {
     }
 
     public static List<Integer> leftView(TreeNode root){
+        if(root == null)
+            return new ArrayList<>();
         LinkedList<TreeNode> que = new LinkedList<>();
         que.addLast(root);
 
@@ -354,6 +356,8 @@ public class l001 {
     }
 
     public static List<Integer> rightView(TreeNode root){
+        if(root == null)
+            return new ArrayList<>();
         LinkedList<TreeNode> que = new LinkedList<>();
         que.addLast(root);
 
@@ -403,6 +407,8 @@ public class l001 {
     }
 
     public static ArrayList<ArrayList<Integer>> verticalOrder(TreeNode root){
+        if(root == null)
+            return new ArrayList<>();
         LinkedList<vPair> que = new LinkedList<>();
         int [] minMax = new int[2];
         widthofShadow(root, 0, minMax);
@@ -434,6 +440,8 @@ public class l001 {
     }
 
     public static ArrayList<Integer> bottomView(TreeNode root){
+        if(root == null)
+            return new ArrayList<>();
         LinkedList<vPair> que = new LinkedList<>();
         int[] minMax = new int[2];
         widthofShadow(root, 0, minMax);
@@ -465,6 +473,8 @@ public class l001 {
     }
 
     public static ArrayList<Integer> topView(TreeNode root){
+        if(root == null)
+            return new ArrayList<>();
         LinkedList<vPair> que = new LinkedList<>();
         int[] minMax = new int[2];
         widthofShadow(root, 0, minMax);
@@ -739,6 +749,38 @@ public class l001 {
             }
         }
         return ans;
+    }
+
+    public static class allSolution {
+        TreeNode pred = null;
+        TreeNode succ = null;
+
+        int ceil = (int)1e9;
+        int floor = -(int)1e9;
+
+        TreeNode prev = null;
+    }
+
+    public static void allSolution(TreeNode node, int data, allSolution pair){
+        if(node == null)
+            return;
+
+        if(node.val < data)
+            pair.floor = Math.max(pair.floor, node.val);
+
+        if(node.val > data)
+            pair.ceil = Math.min(pair.ceil, node.val);
+
+        allSolution(node.left, data, pair);
+        if(node.val == data)
+            pair.pred = pair.prev;
+
+        if(pair.prev != null && pair.prev.val == data)
+            pair.succ = node;
+
+        pair.prev = node;
+        allSolution(node.right, data, pair);
+
     }
 }
 
