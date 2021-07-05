@@ -23,7 +23,7 @@ public class test {
         return -1;
         
     }
-   public static int N=0;
+    public static int N=0;
     public static void hamintion_dfs(int src, int osrc, boolean[] vis, int vtces, String psf){
         if(vtces == N - 1){
             System.out.print(psf + src);
