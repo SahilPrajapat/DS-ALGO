@@ -6,6 +6,7 @@ public class constructionSet {
         int val = 0;
         TreeNode left = null;
         TreeNode right = null;
+        TreeNode parent = null;
 
         TreeNode(int val) {
             this.val = val;
@@ -142,5 +143,89 @@ public class constructionSet {
         root.right = postOrin(post, psi + tel, pei - 1, in, idx + 1, iei);
         
         return root;
+    }
+
+
+    public TreeNode constructFromPrePost_(int[] pre, int psi, int pei, int[] post, int ppsi, int ppei){
+        if(psi > pei)
+            return null;
+
+        TreeNode root = new TreeNode(pre[psi]);
+        if(psi == pei)
+            return root;
+
+        int idx = ppsi;
+        while(post[idx] != pre[psi + 1])
+            idx++;
+
+        int tnel = idx - ppsi + 1;
+
+        root.left = constructFromPrePost_(pre, psi + 1, psi + tnel, post, ppsi, idx);
+        root.right = constructFromPrePost_(pre, psi + tnel + 1, pei, post, idx + 1, ppei);
+
+        return root;
+    }
+
+    public TreeNode constructFromPrePost(int[] pre, int[] post) {  
+        int n = pre.length;
+        return constructFromPrePost_(pre, 0, n-1, post, 0, n-1);
+    }
+
+
+    public void serialize_pre(TreeNode root, StringBuilder sb) {
+        if(root == null){
+            sb.append("#");
+            return;
+        }
+
+        sb.append(root.val + " ");
+        serialize_pre(root.left, sb);
+        serialize_pre(root.right, sb);
+    }
+
+    public String serialize(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        serialize_pre(root, sb);
+        return sb.toString();
+    }
+
+
+    public TreeNode deserialize_pre(String[] arr, int[]idx) {
+        if(idx[0] > arr.length || arr[idx[0]].equals("#")){
+            idx[0]++;
+            return null;
+        }
+
+        int i = idx[0]++;
+        int val = Integer.parseInt(arr[i]);
+        TreeNode root = new TreeNode(val);
+        root.left = deserialize_pre(arr, idx);
+        root.right = deserialize_pre(arr, idx);
+
+        return root;
+    }
+
+    public TreeNode deserialize(String str) {
+        String[] arr = str.split(" ");
+        int[] idx = new int[1];
+        return deserialize_pre(arr, idx);
+    }
+
+    public TreeNode inorderSuccer(TreeNode node){
+
+        TreeNode succ = null;
+        TreeNode right = node.right;
+        if(right != null){
+            while(right.left != null){
+                right = right.left;
+            }
+            return right;
+
+        }
+        while(node.parent != null && node.parent.left != null){
+            node = node.parent;
+        }
+
+        return node.parent;
     }
 }
