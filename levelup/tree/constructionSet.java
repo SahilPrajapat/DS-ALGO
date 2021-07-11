@@ -174,7 +174,7 @@ public class constructionSet {
 
     public void serialize_pre(TreeNode root, StringBuilder sb) {
         if(root == null){
-            sb.append("#");
+            sb.append("# ");
             return;
         }
 
@@ -189,7 +189,7 @@ public class constructionSet {
         return sb.toString();
     }
 
-
+    // Decodes your encoded data to tree.
     public TreeNode deserialize_pre(String[] arr, int[]idx) {
         if(idx[0] > arr.length || arr[idx[0]].equals("#")){
             idx[0]++;
@@ -228,4 +228,10 @@ public class constructionSet {
 
         return node.parent;
     }
+
+
+    public TreeNode constructFromINorLevel_(int[] inord, int Insi, int Inei, int[] level, int losi, int loei){
+
+    }
+
 }

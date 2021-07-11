@@ -258,6 +258,31 @@ public class l005Traversal {
         }
     }
     
-
+    //662 
+    public int widthOfBinaryTree(TreeNode root) {
+        Queue<Pair<TreeNode, Integer>> q = new ArrayDeque<>();
+        q.add(new Pair(root, 0));
+        
+        int level = 0;
+        while(q.size() != 0){
+            int size = q.size();
+            int p1 = q.peek().getValue();
+            int p2 = p1;
+            while(size-- > 0){
+                Pair p = q.peek();
+                p2 = (int)p.getValue();
+                root = (TreeNode)p.getKey();
+                q.remove();
+                
+                if(root.left != null)
+                    q.add(new Pair(root.left, 2 * p2 + 1));
+                if(root.right != null)
+                    q.add(new Pair(root.right, 2* p2 + 2));
+            }
+            
+            level = Math.max(level, p2 - p1 + 1);
+        }
+        return level;
+    }
 
 }
