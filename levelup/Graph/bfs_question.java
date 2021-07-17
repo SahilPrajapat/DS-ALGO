@@ -221,4 +221,85 @@ public class bfs_question {
         }
     }
 
+
+    //207
+    public boolean canFinish(int N, int[][] arr) {
+        
+        ArrayList<Integer>[] graph = new ArrayList[N];
+        for (int i = 0; i < N; i++)
+            graph[i] = new ArrayList<>();
+        for (int[] a : arr) {
+            graph[a[0]].add(a[1]);
+        }
+        
+        LinkedList<Integer> que = new LinkedList<>();
+        ArrayList<Integer> ans = new ArrayList<>();
+        int[] indegree = new int[N];
+
+        for (int i = 0; i < N; i++) {
+            for (Integer e : graph[i]) {
+                indegree[e]++;
+            }
+        }
+
+        for (int i = 0; i < N; i++)
+            if (indegree[i] == 0)
+                que.addLast(i);
+        
+        while (que.size() != 0) {
+            int rvtx = que.removeFirst();
+            ans.add(rvtx);
+
+            for (Integer e : graph[rvtx]) {
+                if (--indegree[e] == 0)
+                    que.addLast(e);
+            }
+        }
+
+        if (ans.size() != N)
+            return false;
+        
+        return true;
+    }
+
+    //210
+    public int[] findOrder(int N, int[][] arr) {
+        ArrayList<Integer>[] graph = new ArrayList[N];
+        for (int i = 0; i < N; i++)
+            graph[i] = new ArrayList<>();
+        for (int[] a : arr) {
+            graph[a[0]].add(a[1]);
+        }
+        
+        LinkedList<Integer> que = new LinkedList<>();
+        int[] ans = new int[N];
+        int[] indegree = new int[N];
+        int idx = N - 1;
+
+        for (int i = 0; i < N; i++) {
+            for (Integer e : graph[i]) {
+                indegree[e]++;
+            }
+        }
+
+        for (int i = 0; i < N; i++)
+            if (indegree[i] == 0)
+                que.addLast(i);
+        
+        while (que.size() != 0) {
+            int rvtx = que.removeFirst();
+            ans[idx--] = rvtx;
+
+            for (Integer e : graph[rvtx]) {
+                if (--indegree[e] == 0)
+                    que.addLast(e);
+            }
+        }
+
+        if (idx != -1)
+            ans = new int[0];
+        
+        return ans;
+    }
+
 }
