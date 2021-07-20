@@ -255,11 +255,8 @@ public class bfs_question {
                     que.addLast(e);
             }
         }
-
-        if (ans.size() != N)
-            return false;
         
-        return true;
+        return ans.size() == N;
     }
 
     //210
