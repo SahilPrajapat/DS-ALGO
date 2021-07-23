@@ -89,7 +89,7 @@ public class l002directedgraph {
         boolean res = false;
         for(Edge e : graph[src]){
             if(vis[e.v] == -1){
-                res = res || dfs_topo_isCycle(graph, src, vis, ans);
+                res = res || dfs_topo_isCycle(graph, e.v, vis, ans);
             }else if(vis[e.v] == 0) {
                 res = true;
             }
@@ -119,6 +119,45 @@ public class l002directedgraph {
 
         return ans;
     }
+
+    // course sehdule using dfs 207
+     // -1 : unvisited, 0 = currentPath, 1 = backtrack
+     public static boolean dfs_topo(ArrayList<Integer>[] graph, int src, int[] vis){
+        vis[src] = 0;
+        
+        boolean res = false;
+        for(Integer e : graph[src]){
+            if(vis[e] == -1){
+                res = res || dfs_topo(graph, e, vis);
+            }else if(vis[e] == 0)
+                res = true;
+        }
+        
+        vis[src] = 1;
+        return res;
+    }
+    
+    public boolean canFinish(int N, int[][] arr) {
+        ArrayList<Integer>[] graph = new ArrayList[N];
+        for (int i = 0; i < N; i++)
+            graph[i] = new ArrayList<>();
+        for (int[] a : arr) {
+            graph[a[0]].add(a[1]);
+        }
+        
+        int[] vis = new int[N];
+        Arrays.fill(vis, -1);
+        
+        boolean cycle = false;
+        for(int i = 0; i < N; i++){
+            if(vis[i] == -1)
+                cycle = cycle || dfs_topo(graph, i, vis);
+        }
+        
+        return !cycle;
+    }
+
+    
 
     public static void constructGraph() {
         int N = 7;

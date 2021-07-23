@@ -34,7 +34,7 @@ public class unionfind {
             return u;
         return par[u] = findPar(u);
         
-        // return par[u] == u ? u : par[u] = find(par[u]);
+        // return par[u] == u ? u : (par[u] = findPar(par[u]));
     }
 
     public static void union(int p1, int p2){
