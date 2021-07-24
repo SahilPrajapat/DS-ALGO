@@ -4,7 +4,7 @@ public class dsuQuestion {
 
     static int[] size, par;
 
-    public int findPar(int u) {
+    public static int findPar(int u) {
         return par[u] == u ? u : (par[u] = findPar(par[u]));
     }
 
@@ -164,5 +164,100 @@ public class dsuQuestion {
         }
 
         return ans;
+    }
+
+    // 684
+    public int[] findRedundantConnection(int[][] edges) {
+        int n = edges.length;
+
+        par = new int[n + 1];
+        for (int i = 0; i <= n; i++)
+            par[i] = i;
+
+        int[] ans = null;
+        for (int[] e : edges) {
+            int u = e[0], v = e[1];
+            int p1 = findPar(u);
+            int p2 = findPar(v);
+
+            if (p1 != p2) {
+                par[p2] = p1;
+            } else {
+                ans = e;
+            }
+        }
+
+        return ans;
+    }
+
+    public int minCostToSupplyWater(int n, int[] wells, int[][] pipes) {
+        ArrayList<int[]> allPipes = new ArrayList<>();
+        for (int[] a : pipes)
+            allPipes.add(a);
+
+        for (int i = 0; i < wells.length; i++)
+            allPipes.add(new int[] { 0, i + 1, wells[i] });
+
+        Collections.sort(allPipes, (a, b) -> {
+            return a[2] - b[2];
+        });
+
+        par = new int[n + 1];
+        int ans = 0;
+
+        for (int i = 0; i < n; i++)
+            par[i] = i;
+
+        for (int[] a : allPipes) {
+            int u = a[0], v = a[1], w = a[2];
+
+            int p1 = findPar(u);
+            int p2 = findPar(v);
+            if (p1 != p2) {
+                par[p2] = p1;
+                ans += w;
+            }
+        }
+
+        return ans;
+
+    }
+
+    public static int mrPresident(int[][] edges, int N, int K) {
+        par = new int[N + 1];
+        for (int i = 0; i <= N; i++)
+            par[i] = i;
+
+        Arrays.sort(edges, (a, b) -> {
+            return a[2] - b[2];
+        });
+
+        ArrayList<Integer> road = new ArrayList<>();
+
+        int component = N, minCost = 0;
+        for (int[] e : edges) {
+            int u = e[0], v = e[1], w = e[2];
+            int p1 = findPar(u);
+            int p2 = findPar(v);
+            if (p1 != p2) {
+                par[p2] = p1;
+                component--;
+                minCost += w;
+                road.add(w);
+            }
+        }
+
+        if (component > 1)
+            return -1;
+
+        int superRoad = 0;
+        for (int i = road.size() - 1; i >= 0; i--) {
+            if (minCost <= K)
+                break;
+            minCost = minCost - road.get(i) + 1;
+            superRoad++;
+        }
+
+        return minCost <= K ? superRoad : -1;
     }
 }
