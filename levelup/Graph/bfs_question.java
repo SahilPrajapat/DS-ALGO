@@ -339,4 +339,54 @@ public class bfs_question {
         }
         return level;
     }
+
+    //815
+    public int numBusesToDestination(int[][] routes, int source, int target) {
+        if(source == target)
+            return 0;
+            
+        int N = routes.length;
+        HashMap<Integer, ArrayList<Integer>> map = new HashMap<>();
+        for(int bus = 0; bus < routes.length; bus++){
+            for(int busStand : routes[bus]){
+                map.putIfAbsent(busStand, new ArrayList<>());
+                map.get(busStand).add(bus);
+            }
+        }
+        
+        HashSet<Integer> busStandVisited = new HashSet<>();
+        boolean[] busVisited = new boolean[N];
+        int interchange = 0;
+
+        LinkedList<Integer> que = new LinkedList<>();
+        que.addLast(source);
+        busStandVisited.add(source);
+
+        while(que.size() != 0){
+            int size = que.size();
+            while(size-- > 0){
+                int busStand = que.removeFirst();
+                for(int bus : map.get(busStand)){
+
+                    if(busVisited[bus])
+                        continue;
+
+                    for(int upcomingBusStand : routes[bus]){
+                        if(!busStandVisited.contains(upcomingBusStand)){
+                            busStandVisited.add(upcomingBusStand);
+                            que.addLast(upcomingBusStand);
+                            if(upcomingBusStand == target)
+                                return interchange + 1;
+                        }
+                    }
+
+                    busVisited[bus] = true;
+                }
+            }
+            interchange++;
+        }
+
+        return -1;
+    }
+
 }
