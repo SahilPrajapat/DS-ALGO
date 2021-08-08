@@ -238,7 +238,7 @@ public class algo {
 
             vis[p.vtx] = true;
             for(Edge e : graph[p.vtx]){
-                if(vis[e.v] && e.w < dis[e.v]){
+                if(!vis[e.v] && e.w < dis[e.v]){
                     dis[e.v] = e.w;
                     
                     pq.add(new primsPair(e.v, e.w));
