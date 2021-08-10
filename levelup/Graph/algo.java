@@ -282,5 +282,56 @@ public class algo {
 
         System.out.println("NegativeCycle " + negativeCycle);
     }
+
+    public static void bellmanFordAlgo_02(int n, int[][] edges, int src){
+        int[] curr = new int[n];
+        Arrays.fill(curr, (int)1e9);
+
+        curr[src] = 0;
+        boolean negativeCycle = false;
+        for(int i = 0; i <= n; i++){
+            boolean anyUpdate = false;
+            for(int[] e : edges){
+                int u = e[0], v = e[1], w = e[2];
+                if(curr[u] != (int)1e9 && curr[u] + w < curr[v]){
+                    curr[v] = curr[u] + w;
+                    anyUpdate = true;
+                    if(i == n){
+                        negativeCycle = true;
+                        break;
+                    }
+                }
+            }
+
+            if(!anyUpdate)
+                break;
+        }
+
+        System.out.println("NegativeCycle " + negativeCycle);
+    }
+
+
+    //floyd-warshall algo
+    public static void floydWarshall(int[][] edges, int n){
+        int[][] mat = new int[n][n];
+        for(int[] d : mat){
+            Arrays.fill(d, (int)1e9);
+        }
+
+        for(int[] e: edges)
+            mat[e[0]][e[1]] = e[2];    //adding weight on matrix
+
+        for(int i = 0; i < n; i++)
+            mat[i][i] = 0;              
+
+        for(int k = 0; k < n; k++){
+            for(int i = 0; i < n; i++){
+                for(int j = 0; j < n; j++){
+                    mat[i][j] = Math.min(mat[i][j], mat[i][k] + mat[k][j]);
+                }
+            }
+        }
+
+    }
     
 }

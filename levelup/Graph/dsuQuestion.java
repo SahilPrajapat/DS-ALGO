@@ -300,4 +300,90 @@ public class dsuQuestion {
 
         return region;
     }
+
+    //924
+    public int minMalwareSpread(int[][] graph, int[] initial) {
+        int n = graph.length;
+        par = new int[n];
+        int[] poc = new int[n];
+        
+        for(int i = 0; i < n; i++){
+            par[i] = i;
+            poc[i] = 1;
+        }
+        
+        for(int i = 0; i < n; i++){
+            int p1 = findPar(i);
+            for(int j = 0; j < n; j++){
+                if(graph[i][j] == 1){
+                    int p2 = findPar(j);
+                    
+                    if(p1 != p2){
+                        par[p2] = p1;
+                        poc[p1] += poc[p2];
+                    }
+                }
+            }
+        }
+        
+        Arrays.sort(initial);
+        
+        int[] ipc = new int[n];
+        for(int ip : initial){
+            int c = findPar(ip);
+            ipc[c]++;
+        }
+        
+        int maxPopulation = 0;
+        int c = initial[0];
+        for(int ip : initial){
+            int p = findPar(ip);
+            if(ipc[p] == 1 && poc[p] > maxPopulation){
+                maxPopulation = poc[p];
+                c = ip;
+            }
+        }
+        
+        return c;
+    }
+
+    //1334 using floyad warshal
+    public int findTheCity(int n, int[][] edges, int distanceThreshold) {
+        int[][] mat = new int[n][n];
+        for(int[] d: mat)
+            Arrays.fill(d, (int)1e9);
+            
+        for(int[] e: edges){
+            mat[e[0]][e[1]] = e[2];
+            mat[e[1]][e[0]] = e[2];
+        }
+        
+        for(int i = 0; i < n; i++)
+            mat[i][i] = 0;
+        
+        for(int k = 0; k < n; k++){
+            for(int i = 0; i < n; i++){
+                for(int j = 0; j < n; j++){
+                    mat[i][j] = Math.min(mat[i][j], mat[i][k] + mat[k][j]);
+                }
+            }
+        }
+
+        int minNoCity = (int)1e9;
+        int ans = -1;
+        for(int i = 0; i < n; i++){
+            int cityCount = 0;
+            for(int j = 0; j < n; j++){
+                if(mat[i][j] <= distanceThreshold){
+                    cityCount++;
+                }
+            }
+
+            if(cityCount <= minNoCity){
+                minNoCity = cityCount;
+                ans = i;
+            }
+        }
+        return ans;
+    }
 }

@@ -193,4 +193,34 @@ public class dfs_question {
         return count;
     }
 
+
+    //1376
+
+    public static int dfs_informTime(int src, ArrayList<Integer>[] graph, int[] informTime){
+        int max = 0;
+        for(int e : graph[src]){
+            max = Math.max(max, dfs_informTime(e, graph, informTime));
+        }
+
+        return max + informTime[src];
+    }
+
+    public int numOfMinutes(int n, int headID, int[] manager, int[] informTime) {
+        ArrayList<Integer>[] graph = new ArrayList[n];
+        for(int i = 0; i < n; i++)
+            graph[i] = new ArrayList<>();
+
+        int src = 0;
+        for(int i = 0; i < n; i++){
+            if(manager[i] == -1){
+                src = i;
+            }else{
+                graph[manager[i]].add(i);
+            }
+        }
+
+        return dfs_informTime(src, graph, informTime);
+
+    }
+
 }
