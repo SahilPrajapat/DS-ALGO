@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class l002directedgraph {
@@ -156,6 +157,93 @@ public class l002directedgraph {
         
         return !cycle;
     }
+
+
+    // SSC
+    public static void dfs_topo(int src, ArrayList<Edge>[] graph, boolean[] vis, ArrayList<Integer>ans){
+        vis[src] = true;
+        for(Edge e : graph[src]){
+            if(!vis[e.v])
+                dfs_topo(e.v, graph, vis, ans);
+        }
+        ans.add(src);
+    }
+
+    public static void dfs_SSC_Compo(int src, ArrayList<Edge>[] graph, boolean[] vis, ArrayList<Integer>component){
+        vis[src] = true;
+        component.add(src);
+        for(Edge e : graph[src]){
+            if(!vis[e.v])
+                dfs_SSC_Compo(e.v, graph, vis, component);
+        }
+    }
+
+    public static void kosaRaju(int N, ArrayList<Edge>[] graph){
+        boolean[] vis = new boolean[N];
+        ArrayList<Integer> order = new ArrayList<>();
+        for(int i = 0; i < N; i++){
+            if(!vis[i])
+                dfs_topo(i, graph, vis, order);
+        }
+
+        // taking complement of graph
+        ArrayList<Edge>[] ngraph = new ArrayList[N];
+        for(int i = 0; i < N; i++)
+            ngraph[i] = new ArrayList<>();
+
+        for(int i = 0; i < N; i++){
+            ArrayList<Edge> ar = graph[i];
+            for(Edge e : ar){
+                ngraph[e.v].add(new Edge(i, e.w));
+            }
+        }
+
+        for(int i = 0; i < N; i++)
+            vis[i] = false;
+
+        ArrayList<Integer> components = new ArrayList<>();
+        for(int i = order.size(); i >= 0; i--){
+            int vtx = order.get(i);
+            if(!vis[vtx]){
+                dfs_SSC_Compo(vtx, ngraph, vis, components);
+                System.out.println(components);
+                components.clear();
+            }
+        }
+    }
+
+
+    // https://practice.geeksforgeeks.org/problems/mother-vertex/1
+        public static void dfs_topo(int src, ArrayList<ArrayList<Integer>> graph, boolean[] vis){
+            vis[src] = true;
+            for(int e : graph.get(src)){
+                if(!vis[e])
+                    dfs_topo(e, graph, vis);
+            }
+    
+        }
+        
+        public static int findMotherVertex(int V, ArrayList<ArrayList<Integer>>adj){
+            boolean[] vis = new boolean[V];
+            int ans = -1;
+            for(int i = 0; i < V; i++){
+                if(!vis[i]){
+                    dfs_topo(i, adj, vis);
+                    ans = i;
+                }
+            }
+            
+            boolean[] check = new boolean[V];
+            dfs_topo(ans, adj, check);
+            for(boolean val : check)
+            {
+                if (!val)
+                {
+                    return -1;
+                }
+            }
+            return ans;
+        }
 
     
 

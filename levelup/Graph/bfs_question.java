@@ -389,4 +389,158 @@ public class bfs_question {
         return -1;
     }
 
+    //490
+    public boolean hasPath(int[][] maze, int[] start, int[] destination) {
+        
+        int n = maze.length, m = maze[0].length, sr = start[0], sc = start[1], er = destination[0], ec = destination[1];
+        LinkedList<Integer> que = new LinkedList<>();
+        boolean[][] vis = new boolean[n][m];
+        int[][] dir = { { 0, 1 }, { 0, -1 }, { 1, 0 }, { -1, 0 } };
+        
+        que.add(sr * m + sc);
+        vis[sr][sc] = true;
+        while(que.size() != 0){
+            int size = que.size();
+            while(size-- > 0){
+                int rm = que.removeFirst();
+                int i = rm / m, j = rm % m;
+                for(int[] d : dir){
+                    int r = i, c = j;
+                    while(r >= 0 && c >= 0 && r < n && c < m && maze[r][c] == 0){
+                        r += d[0];
+                        c += d[1];
+                    }
+
+                    r -= d[0];
+                    c -= d[1];
+
+                    if(vis[r][c])
+                        continue;
+
+                    vis[r][c] = true;
+                    que.addLast(r * m + c);
+                    if(r == er && c == ec)
+                        return true;
+                }
+            }
+        }
+
+        return false;
+
+    }
+
+    //505
+    public int shortestDistance(int[][] maze, int[] start, int[] destination) {
+        int n = maze.length, m = maze[0].length, sr = start[0], sc = start[1], er = destination[0], ec = destination[1];
+
+        class pair implements Comparable<pair>{
+            int r, c, dis;
+
+            public pair(int r, int c, int dis){
+                this.r = r;
+                this.c = c;
+                this.dis = dis;
+            }
+
+            public int compareTo(pair o){
+                return this.dis - o.dis;
+            }
+        }
+
+        PriorityQueue<pair> que = new PriorityQueue<>();
+        int[][] distance = new int[n][m];
+        for(int[] d : distance){
+            Arrays.fill(d, (int)1e8);
+        }
+
+        int[][] dir = { { 0, 1 }, { 0, -1 }, { 1, 0 }, { -1, 0 } };
+
+        pair root = new pair(sr, sc, 0);
+        que.add(root);
+        distance[sr][sc] = 0;
+
+        while(que.size() != 0){
+            pair p = que.remove();
+            for(int[] d : dir){
+                int r = p.r, c = p.c, l = p.dis;
+                while(r >= 0 && c >= 0 && r < n && c < m && maze[r][c] == 0){
+                    r += d[0];
+                    c += d[1];
+                    l++;
+                }
+
+                r -= d[0];
+                c -= d[1];
+                l--;
+
+                if(l >= distance[r][c])
+                    continue;
+
+                que.add(new pair(r, c, l));
+                distance[r][c] = l;
+            }
+        }
+
+        return distance[er][ec] != (int)1e8 ? distance[er][ec] : -1;
+
+    }
+
+    //505
+    public String findShortestWay(int[][] maze, int[] ball, int[] hole) {
+        int n = maze.length, m = maze[0].length, sr = ball[0], sc = ball[1], er = hole[0], ec = hole[1];
+
+        class pair implements Comparable<pair>{
+            int r, c, dis;
+            String path;
+
+            public pair(int r, int c, int dis, String path){
+                this.r = r;
+                this.c = c;
+                this.dis = dis;
+                this.path = path;
+            }
+
+            public int compareTo(pair o){
+                return this.dis == o.dis ? this.path.compareTo(o.path) : this.dis - o.dis;
+            }
+        }
+
+        boolean[][] vis = new boolean[n][m];
+        PriorityQueue<pair> pq = new PriorityQueue<>();
+        pq.add(new pair(sr, sc, 0, ""));
+
+        char[] dstr = {'u', 'd', 'l', 'r'};
+        int[][] dir = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+
+        while(pq.size() != 0){
+            pair rem = pq.remove();
+            if(rem.r == er && rem.c == ec)
+                return rem.path;
+
+            for(int i = 0; i < dir.length; i++){
+                int r = rem.r, c = rem.c, l = rem.dis;
+                String path = rem.path;
+
+                while(r >= 0 && c >= 0 && r < n && c < m && maze[r][c] == 0 && (r != er || c != ec)){
+                    r += dir[i][0];
+                    c += dir[i][1];
+                    l++;
+                }
+
+                if(r != er || c != ec){
+                    r -= dir[i][0];
+                    c -= dir[i][1];
+                    l--;
+                }
+
+                if(!vis[r][c]){
+                    vis[rem.r][rem.c] = true;
+                    pq.add(new pair(r, c, l, path + dstr[i]));
+                }
+            }
+        }
+
+        return "impossible";
+    }
+
 }
