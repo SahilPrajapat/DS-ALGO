@@ -246,9 +246,12 @@ public class l001twoPointer {
                 dp[n] = cost[n];
                 continue;
             }
-
-            int minCost = Math.min(dp[n - 1], dp[n - 2]) + cost[n];
-
+            int minCost;
+            if(n < cost.length)
+                minCost = Math.min(dp[n - 1], dp[n - 2]) + cost[n];
+            else
+                minCost = Math.min(dp[n - 1], dp[n - 2]);
+            
             dp[n] = minCost;
         }
 
