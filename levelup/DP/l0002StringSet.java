@@ -160,4 +160,271 @@ public class l0002StringSet {
 		}
 		return ans;
     }
+
+    public int maximum(int... arr){
+        int max = arr[0];
+        for(int ele: arr)
+            max = Math.max(max, ele);
+
+        return max;
+    }
+
+    //1458
+    public int maxDotProduct_memo(int[] num1, int [] num2, int n, int m, int[][] dp){
+        if(n == 0 || m ==0)
+            return dp[n][m] = -(int)1e8;
+
+        if(dp[n][m] != -(int)1e9)
+            return dp[n][m];
+
+        int val = num1[n - 1] * num2[m - 1];
+        int acceptTwoNumer = maxDotProduct_memo(num1, num2, n - 1, m - 1, dp);
+        int a = maxDotProduct_memo(num1, num2, n - 1, m, dp);
+        int b = maxDotProduct_memo(num1, num2, n, m - 1, dp);
+
+        return dp[n][m] = maximum(val, acceptTwoNumer, a, b);
+    }
+
+    public int maxDotProduct_tabu(int[] num1, int [] num2, int N, int M, int[][] dp){
+        for(int n = 0; n <= N; n++){
+            for(int m = 0; m <= M; m++){
+                if(n == 0 || m ==0){
+                    dp[n][m] = -(int)1e8;
+                    continue;
+                }
+        
+                int val = num1[n - 1] * num2[m - 1];
+                int acceptTwoNumer =  dp[n - 1][m - 1] + val; 
+                int a = dp[n - 1][m];
+                int b = dp[n][m - 1]; 
+        
+                dp[n][m] = maximum(val, acceptTwoNumer, a, b);
+
+            }
+        }
+
+        return dp[N][M];
+    }
+
+    public int maxDotProduct(int[] nums1, int[] nums2) {
+        int n = nums1.length;
+        int m = nums2.length;
+        int[][] dp = new int[n + 1][m + 1];
+        for(int[] d: dp){
+            Arrays.fill(d, -(int)1e9);
+        }
+
+        return maxDotProduct_memo(nums1, nums2, n, m, dp);
+    }
+
+    //1035
+    public int maxUncrossedLines_memo(int[] A, int[] B, int n, int m, int[][]dp){
+        if(n == 0 || m == 0)
+            return dp[n][m] = 0;
+
+        if(dp[n][m] != -1)
+            return dp[n][m];
+
+        if(A[n - 1] == B[m - 1])
+            return dp[n][m] = maxUncrossedLines_memo(A, B, n - 1, m - 1, dp) + 1;
+        else
+            return dp[n][m] = Math.max(maxUncrossedLines_memo(A, B, n - 1, m, dp), maxUncrossedLines_memo(A, B, n, m - 1, dp));
+    }
+
+    public int maxUncrossedLines_tau(int[] A, int[] B, int N, int M, int[][]dp){
+        for(int n = 0; n <= N; n++){
+            for(int m = 0; m <= M; m++){
+                if(n == 0 || m == 0){
+                    dp[n][m] = 0;
+                    continue;
+                }
+
+                if(A[n - 1] == B[m - 1])
+                    dp[n][m] = dp[n - 1][m - 1] + 1;
+                else
+                    dp[n][m] = Math.max(dp[n - 1][m], dp[n][m - 1]);
+            }
+        }
+
+        return dp[N][M];
+    }
+
+    public int maxUncrossedLines(int[] A, int[] B){
+        int n = A.length;
+        int m = B.length;
+        int [][] dp = new int[n + 1][m + 1];
+        for(int[] d : dp)
+            Arrays.fill(d, -1);
+        return maxDotProduct_memo(A, B, n, m, dp);
+    }
+
+    //72
+    public int minDistance_memo(String word1, String word2, int n, int m, int[][] dp){
+        if(n == 0)
+            dp[n][m] = m; //insert
+
+        if(m == 0)
+            dp[n][m] = n; //delete
+        
+        if(dp[n][m] != -1)
+            return dp[n][m];
+
+        int insert = minDistance_memo(word1, word2, n, m - 1, dp);
+        int delete = minDistance_memo(word1, word2, n - 1, m, dp);
+        int replace = minDistance_memo(word1, word2, n - 1, m - 1, dp);
+        if(word1.charAt(n - 1) == word2.charAt(m - 1))
+            return dp[n][m] = replace;
+        else
+            return dp[n][m] = Math.min(Math.min(insert, delete), replace) + 1;
+    }
+
+    public int minDistance_tabu(String word1, String word2, int N, int M, int[][] dp){
+        for(int n = 0; n <= N; n++){
+            for(int m = 0; m <= M; m++){
+                if(n == 0 || m == 0){
+                    dp[n][m] = (n == 0 ? m : n);
+                    continue;
+                }
+
+                int insert = dp[n][m - 1];
+                int delete = dp[n - 1][m];
+                int replace = dp[n - 1][m - 1];
+
+                if(word1.charAt(n - 1) == word2.charAt(m - 1))
+                    dp[n][m] = replace;
+                else
+                    dp[n][m] = Math.min(Math.min(insert, delete), replace) + 1;
+            }
+        }
+
+        return dp[N][M];
+    }
+
+    public int minDistance(String word1, String word2){
+        int n = word1.length();
+        int m = word2.length();
+        int [][] dp = new int[n + 1][m + 1];
+        for(int[] d: dp){
+            Arrays.fill(d, -1);
+        }
+
+        return minDistance_memo(word1, word2, n, m, dp);
+    }
+
+    //583
+    public int minDistance_memo2(String word1, String word2, int n, int m, int[][] dp){
+        if(n == 0)
+            dp[n][m] = m; //insert
+
+        if(m == 0)
+            dp[n][m] = n; //delete
+        
+        if(dp[n][m] != -1)
+            return dp[n][m];
+
+        int insert = minDistance_memo2(word1, word2, n, m - 1, dp);
+        int delete = minDistance_memo2(word1, word2, n - 1, m, dp);
+        int replace = minDistance_memo2(word1, word2, n - 1, m - 1, dp);
+        if(word1.charAt(n - 1) == word2.charAt(m - 1))
+            return dp[n][m] = replace;
+        else
+            return dp[n][m] = Math.min(insert, delete) + 1;
+    }
+    
+    public int minDistance2(String word1, String word2) {
+        int n = word1.length();
+        int m = word2.length();
+        int [][] dp = new int[n + 1][m + 1];
+        for(int[] d: dp){
+            Arrays.fill(d, -1);
+        }
+        
+        return minDistance_memo2(word1, word2, n, m, dp);
+    }
+
+    //longest common subsequence method
+    public static int LCSS_dp2(String str, int N, String str2, int M, int[][]dp){
+        for(int n = 0; n <= N; n++){
+            for(int m = 0; m <= M; m++){
+                
+                if(n == 0 || m == 0){
+                    dp[n][m] = 0;
+                    continue;
+                }
+
+                if(str.charAt(n - 1) == str2.charAt(m - 1))
+                    dp[n][m] = dp[n - 1][m - 1] + 1;
+                else
+                    dp[n][m] = Math.max(dp[n- 1][m], dp[n][m - 1]);
+            }
+        }
+
+        return dp[N][M];
+    }
+    
+    public int minDistance3(String word1, String word2) {
+        int n = word1.length();
+        int m = word2.length();
+        int [][] dp = new int[n + 1][m + 1];
+        for(int[] d: dp){
+            Arrays.fill(d, -1);
+        }
+        
+        return m + n - (2 * LCSS_dp2(word1, n, word2, m, dp));
+    }
+
+    //115
+    public int numDistinct_memo(String s, String t, int n, int m, int[][] dp){
+        if(m == 0 || n < m)
+            return dp[n][m] = (m == 0 ? 1 : 0);
+
+        if(dp[n][m] != -1)
+            return dp[n][m];
+
+        int a = numDistinct_memo(s, t, n - 1, m - 1, dp);
+        int b = numDistinct_memo(s, t, n - 1, m, dp);
+
+        if(s.charAt(n - 1) == t.charAt(m - 1))
+            return dp[n][m] = a + b;
+        else
+            return dp[n][m] = b;
+    }
+
+    public int numDistinct_tabu(String s, String t, int N, int M, int[][] dp){
+        for(int n = 0; n <= N; n++){
+            for(int m = 0; m <= M; m++){
+                if(m == 0 || n < m){
+                    dp[n][m] = (m == 0 ? 1 : 0);
+                    continue;
+                }
+
+                int a = dp[n - 1][m - 1];
+                int b = dp[n - 1][m];
+
+                if(s.charAt(n - 1) == t.charAt(m - 1))
+                    dp[n][m] = a + b;
+                else
+                    dp[n][m] = b;
+            }   
+        }
+
+        return dp[N][M];
+    }
+
+    public int numDistinct(String s, String t) {
+        int n = s.length();
+        int m = t.length();
+        int [][] dp = new int[n + 1][m + 1];
+        for(int[] d : dp){
+            Arrays.fill(d, -1);
+        }
+
+        return numDistinct_memo(s, t, n, m, dp); 
+    }
+
+
+
+    public static void main(String[] args) {
+        
+    }
 }
