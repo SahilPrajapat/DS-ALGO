@@ -1,3 +1,4 @@
+import java.time.Year;
 import java.util.*;
 
 public class l0002StringSet {
@@ -420,6 +421,25 @@ public class l0002StringSet {
         }
 
         return numDistinct_memo(s, t, n, m, dp); 
+    }
+
+    // https://practice.geeksforgeeks.org/problems/count-subsequences-of-type-ai-bj-ck4425/1
+    public static int fun(String s){
+        int emptyCount = 1;
+        long aCount = 0, bCount = 0, cCount = 0;
+        int mod = (int)1e9 + 7;
+
+        for(int i = 0; i < s.length(); i++){
+            char ch = s.charAt(i);
+            if(ch == 'a')
+                aCount = aCount + (emptyCount + aCount) % mod;
+            else if(ch == 'b')
+                bCount = bCount + (aCount + bCount) % mod;
+            else if(ch == 'c')
+                cCount = cCount + (bCount + cCount) % mod;
+        }
+
+        return (int)(cCount % mod);
     }
 
 
